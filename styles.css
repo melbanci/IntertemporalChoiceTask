@@ -48,8 +48,7 @@ body, html {
     width: 100%;
     border-radius: 5px;
     background-color: #f2f2f2;
-    padding: 20px;
-    margin: 50px;
+    margin: 60px;
     text-align: center;
     flex: 0; /* Keep the question's padding, but don't allow it to grow */
 }
@@ -65,17 +64,19 @@ body, html {
     width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
-    background-color: #f2f2f2;
     padding: 20px;
 }
 .form-group {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     /* justify-content: flex-start; */
     justify-content: space-around;
     /* align-items: center; */
-    margin: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
 }
 
 /* Style the input fields */
@@ -84,6 +85,8 @@ body, html {
     margin-right: 10px;
     flex: 1;
     font-size: 14px;
+    border: 0px;
+
 }
 
 /* Style the label */
