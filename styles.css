@@ -26,7 +26,7 @@ body, html {
     padding: 20px;
 }
 /* Make the form container fill the entire available space */
-#form-div {
+#content-div {
     display: flex;
     flex-direction: column;
     flex: 1; /* Make form-div take up the remaining space above the button container */
@@ -34,21 +34,11 @@ body, html {
     margin: 20px; /* Optional: margin around the form container */
 }
 
-/* Ensure the content within the form is centered */
-#content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1; /* Ensure the content fills the available space in form-div */
-}
-
 /* Style the question */
 #questionDiv {
     width: 100%;
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    margin: 60px;
+    margin: 5px;
+    margin-bottom: 50px;
     text-align: center;
     flex: 0; /* Keep the question's padding, but don't allow it to grow */
 }
@@ -60,41 +50,38 @@ body, html {
 }
 /* Form group: label and input on the same line */
 
-#answersDiv{
-    width: 100%;
+.responseContainer {
+    width: 100%; 
     display: flex;
-    flex-direction: column;
-    padding: 20px;
+    flex: 2;
+    flex-direction: row;
 }
-.form-group {
-    /* width: 100%; */
-    display: flex;
-    /* justify-content: flex-start; */
-    justify-content: space-around;
-    /* align-items: center; */
-    margin-top: 15px;
-    margin-bottom: 15px;
+/* Styling the answer buttons */
+.optionButtons {
+    width: 100%; 
+    margin: 5px 5px;
+    padding: 30px;
+    border: none;
     border-radius: 5px;
     background-color: #f2f2f2;
-    padding: 20px;
+    color: black;
+    cursor: pointer;
+    font-size: 36px;
 }
-
-/* Style the input fields */
-.form-group input[type="radio"] {
-    padding: 10px;
-    margin-right: 10px;
-    flex: 1;
-    font-size: 14px;
-    border: 0px;
+/* Button selection style */
+.optionButtons.selected {
+    background-color: #007bff;
+    color: white;
 
 }
-
-/* Style the label */
-.form-group label {
-    margin-right: 10px;
-    flex: 2;
-    text-align: left;
+.optionButtons.unselected {
+    background-color: #f2f2f2;
+    color: black;
 }
+/* Button hover effect */
+/* .optionButtons:hover {
+    background-color: darkgrey;
+} */
 
 /* Style error message if trying to submit with no answer */
 #noResponseError {
@@ -110,9 +97,8 @@ body, html {
     justify-content: space-around;
     padding: 20px;
 }
-
-/* Styling the buttons */
-button {
+/* Styling the navigation buttons (back, answer, skip) */
+.navigationButtons {
     flex: 1;
     margin: 0 5px;
     padding: 60px;
@@ -125,13 +111,13 @@ button {
 }
 
 /* Button hover effect */
-button:hover {
+.navigationButtons:hover {
     background-color: #0056b3;
 }
 
 /* Responsive: Ensure buttons remain side by side on small screens */
 @media (max-width: 600px) {
-    button {
+    .navigationButtons {
         font-size: 24px;
         padding: 15px;
     }

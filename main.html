@@ -12,34 +12,27 @@
 
     <h2 id="questionNum">Question 1 of 45</h2>
 
-    <!-- Your content goes here -->
-     <div id="form-div">
-        <form id="content">
-            <div id="questionDiv">
-                <p id="question">Right now, which do you prefer?</p>
-            </div>
-            <div id="answersDiv">
-                <div class="form-group">
-                    <input type="radio" id="immediateOption" name="choiceAnswer" value="now">
-                    <label for="now" id="labelImmediate">0.20 this week</label><br>
-                </div>
-                <div class="form-group">
-                    <input type="radio" id="delayedOption" name="choiceAnswer" value="later">
-                    <label for="later" id="labelDelayed">0.70 in 1 week</label><br>
-                </div>
-            </div>
-        </form>
-     </div>
-
-     <p id="noResponseError" style="display: none;">Please make your selection</p>
+    <div id="content-div">
+        <div id="questionDiv">
+            <p id="question">Right now, which do you prefer?</p>
+        </div>
+    
+        <div class="response-container">
+            <button id="option1" class="optionButtons" onclick="selectOption(this, 'Option 1')">$0.20 this week</button>
+            <button id="option2" class="optionButtons" onclick="selectOption(this, 'Option 2')">$0.70 in 1 week</button>
+        </div>
+    
+         <p id="noResponseError" style="display: none;">Please make your selection</p>
+    </div>
 
     <div id="button-container">
-        <button onclick="previousTrial()">Back</button>
-        <button onclick="nextTrial()">Answer</button>
-        <button onclick="skipTrial()">Skip</button>
+        <button class="navigationButtons" onclick="previousTrial()">Back</button>
+        <button class="navigationButtons" onclick="nextTrial()">Answer</button>
+        <button class="navigationButtons" onclick="skipTrial()">Skip</button>
     </div>
 
     <script>
+
         // first trial already displayed [0.20, 0.70, " in 1 week"]
         var trials= [
             [0.20, 0.70, " in 2 weeks"], [0.20, 0.70, " in 3 weeks"],
@@ -62,30 +55,24 @@
 
         let trialNum = 1
 
+        let currentSelectedOption=""
 
-        function getSelectedOption() {
-            // Get all radio buttons with the name 'choiceAnswer'
-            var choices = document.getElementsByName('choiceAnswer');
-            var selectedValue;
+        function selectOption(button, response) {
+            // Remove 'selected' class from all buttons
+            var buttons = document.querySelectorAll('.response-container button');
+            buttons.forEach(function(btn) {
+                btn.classList.remove('selected');
+            });
 
-            // Loop through the radio buttons to find the selected one
-            for (var i = 0; i < choices.length; i++) {
-                if (choices[i].checked) {
-                    selectedValue = choices[i].value;
-                    break;
-                }
-            }
-            return selectedValue
+            // Add 'selected' class to the clicked button
+            button.classList.add('selected');
+
+            // Display the selected response
+            console.log("You selected: " + response);
+            currentSelectedOption = response
+            console.log("currentSelectedOptionIs: " + currentSelectedOption);
         }
-        function clearSelectedOptions() {
-            // Get all radio buttons with the name 'choiceAnswer'
-            var choices = document.getElementsByName('choiceAnswer');
-
-            // Loop through the radio buttons and clear the selection
-            for (var i = 0; i < choices.length; i++) {
-                choices[i].checked = false;
-            }
-        }
+        
         function nextTrial() {
             if (trialNum < 45){  // only if we haven't reached max trials
                 trialNum ++ 
@@ -96,42 +83,49 @@
                 var immediateOffer= trials[trialNum][0]
                 var delayedOffer= trials[trialNum][1]
                 var delay= trials[trialNum][2]
-                document.getElementById('labelImmediate').innerText="$"+immediateOffer + " this week"
-                document.getElementById('labelDelayed').innerText="$"+delayedOffer + delay
-                
-                //display and record answers
+
+                document.getElementById('option1').innerText="$"+immediateOffer + " this week"
+                document.getElementById('option2').innerText="$"+delayedOffer + delay
+
                 if (nextTrialAnswer != undefined){  //user already answered this trial
-                    //populate buttons
+                    //show previous answers
                     if (nextTrialAnswer=="now"){
-                        document.getElementById('immediateOption').checked = true;
-                        document.getElementById('delayedOption').checked = false;
+                        document.getElementById('option1').classList.add('selected');
+                        document.getElementById('option2').classList.remove('selected');
                     }
                     else if (nextTrialAnswer=="later"){
-                        document.getElementById('immediateOption').checked = false;
-                        document.getElementById('delayedOption').checked = true;
+                        document.getElementById('option1').classList.remove('selected');
+                        document.getElementById('option2').classList.add('selected');
                     }
                     else if (nextTrialAnswer=="skipped"){
-                        document.getElementById('immediateOption').checked = false;
-                        document.getElementById('delayedOption').checked = false;
+                        document.getElementById('option1').classList.remove('selected');
+                        document.getElementById('option2').classList.remove('selected');
                     }
                 }
                 else{  //user is answering this trial for the first time
-                    var selectedOption = getSelectedOption()  //get answer from option buttons
-                    if (selectedOption!= undefined){ //user provided an answer
+                    if (currentSelectedOption!= "none"){ //user provided an answer
                         document.getElementById("noResponseError").style.display="none"
-                        answers[trialNum]=selectedOption
+                        console.log("currentSelectedOption is ",currentSelectedOption)
+                        if (currentSelectedOption=="Option 1"){
+                            answers[trialNum]="now"
+                        }
+                        else if (currentSelectedOption=="Option 2"){
+                            answers[trialNum]="later"
+                        }
                         console.log("answers: ",answers)
-                        clearSelectedOptions() //clear buttons for next question
                     }
                     else{ //user did not provide an answer
                         document.getElementById("noResponseError").style.display="flex" //show error message
                     }
+                    //clear all answers for next answer
+                    document.getElementById('option1').classList.remove('selected');
+                    document.getElementById('option2').classList.remove('selected');
+                    currentSelectedOption="none"
                 }
             }
             else{
                 console.log("experimentOver")
             }
-
         }
 
         //TODO: previous trial answer should be saved
@@ -144,23 +138,24 @@
                 var delayedOffer= trials[trialNum][1]
                 var delay= trials[trialNum][2]
 
-                document.getElementById('labelImmediate').innerText="$"+immediateOffer + " this week"
-                document.getElementById('labelDelayed').innerText="$"+delayedOffer + delay
+                document.getElementById('option1').innerText="$"+immediateOffer + " this week"
+                document.getElementById('option2').innerText="$"+delayedOffer + delay
 
                 //retrieve answer from previous trial
                 previousTrialAnswer=answers[trialNum]
-                if (previousTrialAnswer=="now"){
-                    document.getElementById('immediateOption').checked = true;
-                    document.getElementById('delayedOption').checked = false;
-                }
-                else if (previousTrialAnswer=="later"){
-                    document.getElementById('immediateOption').checked = false;
-                    document.getElementById('delayedOption').checked = true;
-                }
-                else if (previousTrialAnswer=="skipped"){
-                    document.getElementById('immediateOption').checked = false;
-                    document.getElementById('delayedOption').checked = false;
-                }
+                    //show previous answers
+                    if (previousTrialAnswer=="now"){
+                        document.getElementById('option1').classList.add('selected');
+                        document.getElementById('option2').classList.remove('selected');
+                    }
+                    else if (previousTrialAnswer=="later"){
+                        document.getElementById('option1').classList.remove('selected');
+                        document.getElementById('option2').classList.add('selected');
+                    }
+                    else if (previousTrialAnswer=="skipped"){
+                        document.getElementById('option1').classList.remove('selected');
+                        document.getElementById('option2').classList.remove('selected');
+                    }
             }
         }
 
@@ -174,8 +169,8 @@
                 var immediateOffer= trials[trialNum+1][0]
                 var delayedOffer= trials[trialNum+1][1]
                 var delay= trials[trialNum+1][2]
-                document.getElementById('labelImmediate').innerText="$"+immediateOffer + " this week"
-                document.getElementById('labelDelayed').innerText="$"+delayedOffer + delay
+                document.getElementById('option1').innerText="$"+immediateOffer + " this week"
+                document.getElementById('option2').innerText="$"+delayedOffer + delay
             }
         }
     </script>
