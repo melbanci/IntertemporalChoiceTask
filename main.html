@@ -26,16 +26,16 @@
     </div>
 
     <div id="button-container">
-        <button class="navigationButtons" onclick="previousTrial()">Back</button>
-        <button class="navigationButtons" onclick="nextTrial()">Answer</button>
-        <button class="navigationButtons" onclick="skipTrial()">Skip</button>
+        <button id="backBtn" disabled=true class="navigationButtons disabled" onclick="previousTrial()">Back</button>
+        <button id="nextBtn" class="navigationButtons" onclick="nextTrial()">Next</button>
+        <!-- <button class="navigationButtons" onclick="skipTrial()">Skip</button> -->
     </div>
 
     <script>
 
         // first trial already displayed [0.20, 0.70, " in 1 week"]
         var trials= [
-            [0.20, 0.70, " in 2 weeks"], [0.20, 0.70, " in 3 weeks"],
+            [0.20, 0.70, " in 1 week"], [0.20, 0.70, " in 2 weeks"], [0.20, 0.70, " in 3 weeks"],
             [0.20, 1.20, " in 1 week"], [0.20, 1.20, " in 2 weeks"], [0.20, 1.20, " in 3 weeks"],
             [0.20, 2.20, " in 1 week"], [0.20, 2.20, " in 2 weeks"], [0.20, 2.20, " in 3 weeks"],
             [0.20, 4.20, " in 1 week"], [0.20, 4.20, " in 2 weeks"], [0.20, 4.20, " in 3 weeks"],
@@ -53,41 +53,93 @@
         ]
         var answers={}
 
-        let trialNum = 1
+        let trialNum = 0
 
-        let currentSelectedOption=""
+        let currentSelectedOption="none"
+
+        function getSelected() {
+            var buttons = document.querySelectorAll('.response-container button');
+            currentSelectedOption= "none"
+
+            //unclick other button
+            buttons.forEach(function(btn) {
+               if (btn.classList.contains('selected')){ 
+                if (btn.getAttribute('id') == "option1"){
+                    currentSelectedOption = "Option 1"
+                }
+                else if (btn.getAttribute('id') == "option2"){
+                    currentSelectedOption = "Option 2"
+                }
+               }
+            });
+            console.log("You selected: "  + currentSelectedOption);
+        }
 
         function selectOption(button, response) {
-            // Remove 'selected' class from all buttons
             var buttons = document.querySelectorAll('.response-container button');
+            var otherButton;
+
+            //unclick other button
             buttons.forEach(function(btn) {
-                btn.classList.remove('selected');
+               // btn.classList.remove('selected');
+               if (btn != button){
+                    otherButton = btn
+                    otherButton.classList.remove('selected')
+               }
             });
-
-            // Add 'selected' class to the clicked button
-            button.classList.add('selected');
-
+            // button is being unclicked
+            if (button.classList.contains('selected')){
+                console.log(response + "is being unclicked")
+                button.classList.remove('selected');
+                currentSelectedOption = "none"
+            }
+            // button is being clicked
+            else{
+                button.classList.add('selected');
+                currentSelectedOption = response
+            }
             // Display the selected response
-            console.log("You selected: " + response);
-            currentSelectedOption = response
-            console.log("currentSelectedOptionIs: " + currentSelectedOption);
+            console.log("You selected: "  + currentSelectedOption);
         }
         
         function nextTrial() {
-            if (trialNum < 45){  // only if we haven't reached max trials
-                trialNum ++ 
-                document.getElementById('questionNum').innerText= "Question " + trialNum + " of 45" //change trial num text
-                nextTrialAnswer=answers[trialNum]
+            getSelected()
+            // Enable back button
+            let button = document.getElementById('backBtn');
+            button.disabled = false; // Enables the button
+            button.classList.remove('disabled'); // Adds a 'disabled' class to the button
 
-                //display corresponding questions
-                var immediateOffer= trials[trialNum][0]
-                var delayedOffer= trials[trialNum][1]
-                var delay= trials[trialNum][2]
+            console.log("currentSelectedOption is ",currentSelectedOption)
+
+            // only if we haven't reached max trials
+            if (trialNum < 45){  
+
+                //save user answer
+                if (currentSelectedOption!= "none"){ //user provided an answer
+                        if (currentSelectedOption=="Option 1"){
+                            answers[trialNum]="now"
+                        }
+                        else if (currentSelectedOption=="Option 2"){
+                            answers[trialNum]="later"
+                        }
+                }
+                else{ //user did not provide an answer
+                    //TO DO: skip trial
+                    answers[trialNum]="skipped" 
+                }
+
+                //display next trial corresponding questions
+                var immediateOffer= trials[trialNum+1][0]
+                var delayedOffer= trials[trialNum+1][1]
+                var delay= trials[trialNum+1][2]
 
                 document.getElementById('option1').innerText="$"+immediateOffer + " this week"
                 document.getElementById('option2').innerText="$"+delayedOffer + delay
 
-                if (nextTrialAnswer != undefined){  //user already answered this trial
+                // check for answer in next trial
+                nextTrialAnswer=answers[trialNum+1]
+
+                if (nextTrialAnswer != undefined){  //user already provided an answer for this trial
                     //show previous answers
                     if (nextTrialAnswer=="now"){
                         document.getElementById('option1').classList.add('selected');
@@ -102,47 +154,40 @@
                         document.getElementById('option2').classList.remove('selected');
                     }
                 }
-                else{  //user is answering this trial for the first time
-                    if (currentSelectedOption!= "none"){ //user provided an answer
-                        document.getElementById("noResponseError").style.display="none"
-                        console.log("currentSelectedOption is ",currentSelectedOption)
-                        if (currentSelectedOption=="Option 1"){
-                            answers[trialNum]="now"
-                        }
-                        else if (currentSelectedOption=="Option 2"){
-                            answers[trialNum]="later"
-                        }
-                        console.log("answers: ",answers)
-                    }
-                    else{ //user did not provide an answer
-                        document.getElementById("noResponseError").style.display="flex" //show error message
-                    }
+                else{  
                     //clear all answers for next answer
                     document.getElementById('option1').classList.remove('selected');
                     document.getElementById('option2').classList.remove('selected');
                     currentSelectedOption="none"
                 }
+                //increment trial number
+                console.log("answers is ",answers)
+                trialNum ++ 
+                document.getElementById('questionNum').innerText= "Question " + (trialNum+1) + " of 45" //change trial num text
             }
             else{
+                //disable next button
                 console.log("experimentOver")
             }
+            console.log("next trialNum is ",trialNum)
         }
 
         //TODO: previous trial answer should be saved
         function previousTrial() {
-            if (trialNum >1) {
-                trialNum--
-                document.getElementById('questionNum').innerText= "Question " + trialNum + " of 45" //change trial num text
+            getSelected()
 
-                var immediateOffer= trials[trialNum][0]
-                var delayedOffer= trials[trialNum][1]
-                var delay= trials[trialNum][2]
+            if (trialNum >0) {
+
+                var immediateOffer= trials[trialNum-1][0]
+                var delayedOffer= trials[trialNum-1][1]
+                var delay= trials[trialNum-1][2]
 
                 document.getElementById('option1').innerText="$"+immediateOffer + " this week"
                 document.getElementById('option2').innerText="$"+delayedOffer + delay
 
                 //retrieve answer from previous trial
-                previousTrialAnswer=answers[trialNum]
+                previousTrialAnswer=answers[trialNum-1]
+                console.log("previousTrialAnswer is ",previousTrialAnswer)
                     //show previous answers
                     if (previousTrialAnswer=="now"){
                         document.getElementById('option1').classList.add('selected');
@@ -156,23 +201,24 @@
                         document.getElementById('option1').classList.remove('selected');
                         document.getElementById('option2').classList.remove('selected');
                     }
+                //disable back button on first trial
+                // if (trialNum==1) {
+                //     let button = document.getElementById('backBtn');
+                //     button.disabled = true; // Disables the button
+                //     button.classList.add('disabled'); // Adds a 'disabled' class to the button
+                // }
+                console.log("answers is ",answers)
+                trialNum--
+                document.getElementById('questionNum').innerText= "Question " + (trialNum+1) + " of 45" //change trial num text
+            }
+            else{
+                //disable back button
+                // let button = document.getElementById('backBtn');
+                // button.disabled = true; // Disables the button
+                // button.classList.add('disabled'); // Adds a 'disabled' class to the button
             }
         }
 
-        function skipTrial() {
-            if (trialNum < 46) {     
-                trialNum++
-                document.getElementById('questionNum').innerText= "Question " + trialNum + " of 45" //change trial num text
-           
-                answers[trialNum]="skipped"   //record blank answer
-
-                var immediateOffer= trials[trialNum+1][0]
-                var delayedOffer= trials[trialNum+1][1]
-                var delay= trials[trialNum+1][2]
-                document.getElementById('option1').innerText="$"+immediateOffer + " this week"
-                document.getElementById('option2').innerText="$"+delayedOffer + delay
-            }
-        }
     </script>
         
 </body>

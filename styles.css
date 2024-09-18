@@ -11,7 +11,7 @@ body, html {
 
 /* Header styling */
 .header {
-    background-color: #007bff; /* Blue background */
+    background-color: green; /* Blue background */
     color: white;              /* White text color */
     padding: 20px;             /* Padding inside the header */
     text-align: left;        /* Centered text */
@@ -104,17 +104,18 @@ body, html {
     padding: 60px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
+    background-color: green;
     color: white;
     cursor: pointer;
     font-size: 36px;
 }
-
 /* Button hover effect */
 .navigationButtons:hover {
-    background-color: #0056b3;
+    background-color: green;
 }
-
+.navigationButtons:disabled {
+    background-color: #f2f2f2;
+}
 /* Responsive: Ensure buttons remain side by side on small screens */
 @media (max-width: 600px) {
     .navigationButtons {
