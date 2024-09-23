@@ -58,28 +58,28 @@
         let currentSelectedOption="none"
 
         //=========SEND DATA TO SERVER==========
-        function sendData(data) {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://54.224.65.24/experiments/SRT_mobile/saveData.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    const responseStatus = xhr.responseText;
-                    console.log("Data sent response: " + responseStatus);
-                    MessageMetricwireEventHandler("catalyst_next_button");
-                }
-            };
-            xhr.send(JSON.stringify(data));
-        }
+        // function sendData(data) {
+        //     const xhr = new XMLHttpRequest();
+        //     xhr.open('POST', 'http://54.224.65.24/experiments/SRT_mobile/saveData.php', true);
+        //     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        //     xhr.onreadystatechange = function () {
+        //         if (xhr.readyState === 4) {
+        //             const responseStatus = xhr.responseText;
+        //             console.log("Data sent response: " + responseStatus);
+        //             MessageMetricwireEventHandler("catalyst_next_button");
+        //         }
+        //     };
+        //     xhr.send(JSON.stringify(data));
+        // }
         
-        export function MessageMetricwireEventHandler(message) {
-            message = message || "catalyst_next_button";
-            if (typeof window.catalystMessageHandler !== "undefined") {
-                window.catalystMessageHandler.postMessage(message);
-            } else {
-                console.error("MetricWire catalyst event handler is missing.");
-            }
-        }
+        // export function MessageMetricwireEventHandler(message) {
+        //     message = message || "catalyst_next_button";
+        //     if (typeof window.catalystMessageHandler !== "undefined") {
+        //         window.catalystMessageHandler.postMessage(message);
+        //     } else {
+        //         console.error("MetricWire catalyst event handler is missing.");
+        //     }
+        // }
         //=====================================
 
         function getSelected() {
