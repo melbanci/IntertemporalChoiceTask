@@ -72,8 +72,11 @@ body, html {
 .optionButtons.selected {
     background-color: #007bff;
     color: white;
-
 }
+.optionButtons.pressed {
+    color: white;
+    background-color: #007bff;
+  }
 .optionButtons.unselected {
     background-color: #f2f2f2;
     color: black;

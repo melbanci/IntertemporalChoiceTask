@@ -18,21 +18,9 @@
         </div>
     
         <div class="response-container">
-            <button id="option1" class="optionButtons" 
-            ontouchstart="this.classList.add('pressed')" 
-            ontouchend="this.classList.remove('pressed')"
-            onclick="selectOption(this, 'Option 1')">
-                $0.20 this week
-        </button>
-
-        <button id="option2" class="optionButtons" 
-        ontouchstart="this.classList.add('pressed')" 
-        ontouchend="this.classList.remove('pressed')"
-        onclick="selectOption(this, 'Option 2')">
-                $0.70 in 1 week
-        </button>
-
-    </div>
+            <button id="option1" class="optionButtons" onclick="selectOption(this, 'Option 1')">$0.20 this week</button>
+            <button id="option2" class="optionButtons" onclick="selectOption(this, 'Option 2')">$0.70 in 1 week</button>
+        </div>
     
          <p id="noResponseError" style="display: none;">Please make your selection</p>
     </div>
@@ -134,8 +122,6 @@
             else{
                 button.classList.add('selected');
                 currentSelectedOption = response
-                //automatically advance to next trial
-                nextTrial()
             }
             // Display the selected response
             console.log("You selected: "  + currentSelectedOption);
