@@ -64,35 +64,40 @@
             [1.50, 6.50, " in 1 week"], [1.50, 6.50, " in 2 weeks"], [1.50, 6.50, " in 3 weeks"]
         ]
         var answers={}
+        var RTs={}
 
         let trialNum = 0
+        let maxTrialNum = 44
+
+        var backBtnClicked=0
 
         let currentSelectedOption="none"
 
         //=========SEND DATA TO SERVER==========
-        // function sendData(data) {
-        //     const xhr = new XMLHttpRequest();
-        //     xhr.open('POST', 'http://54.224.65.24/experiments/SRT_mobile/saveData.php', true);
-        //     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-        //     xhr.onreadystatechange = function () {
-        //         if (xhr.readyState === 4) {
-        //             const responseStatus = xhr.responseText;
-        //             console.log("Data sent response: " + responseStatus);
-        //             MessageMetricwireEventHandler("catalyst_next_button");
-        //         }
-        //     };
-        //     xhr.send(JSON.stringify(data));
-        // }
+        function sendData(data) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'http://54.224.65.24/experiments/SRT_mobile/saveData.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    const responseStatus = xhr.responseText;
+                    console.log("Data sent response: " + responseStatus);
+                    MessageMetricwireEventHandler("catalyst_next_button");
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
         
-        // export function MessageMetricwireEventHandler(message) {
-        //     message = message || "catalyst_next_button";
-        //     if (typeof window.catalystMessageHandler !== "undefined") {
-        //         window.catalystMessageHandler.postMessage(message);
-        //     } else {
-        //         console.error("MetricWire catalyst event handler is missing.");
-        //     }
-        // }
+        function MessageMetricwireEventHandler(message) {
+            message = message || "catalyst_next_button";
+            if (typeof window.catalystMessageHandler !== "undefined") {
+                window.catalystMessageHandler.postMessage(message);
+            } else {
+                console.error("MetricWire catalyst event handler is missing.");
+            }
+        }
         //=====================================
+
 
         function getSelected() {
             var buttons = document.querySelectorAll('.response-container button');
@@ -113,6 +118,7 @@
         }
 
         function selectOption(button, response) {
+
             var buttons = document.querySelectorAll('.response-container button');
             var otherButton;
 
@@ -140,33 +146,60 @@
             // Display the selected response
             console.log("You selected: "  + currentSelectedOption);
         }
-        
+
         function nextTrial() {
+            console.log("RTs is ",RTs)
+            if (trialNum in RTs) {
+                RTs[trialNum].push(Date.now()); // Append current timestamp to the existing list at trialNum
+            } else {
+                RTs[trialNum] = [Date.now()]; // Initialize a new list with current timestamp
+            }
+
             getSelected()
+
             // Enable back button
             let button = document.getElementById('backBtn');
-            button.disabled = false; // Enables the button
-            button.classList.remove('disabled'); // Adds a 'disabled' class to the button
+            if (backBtnClicked == 1){ //user already used the back button once
+                button.disabled = true; // Enables the button
+                button.classList.add('disabled'); // Adds a 'disabled' class to the button
+            }
+            else{
+                button.disabled = false; // Enables the button
+                button.classList.remove('disabled'); // Adds a 'disabled' class to the button
+            }
+            backBtnClicked=0 //reset back btn count
 
             console.log("currentSelectedOption is ",currentSelectedOption)
 
             // only if we haven't reached max trials
-            if (trialNum < 45){  
-
-                //save user answer
+            if (trialNum < maxTrialNum){  
+                //===save user answer===
                 if (currentSelectedOption!= "none"){ //user provided an answer
-                        if (currentSelectedOption=="Option 1"){
-                            answers[trialNum]="now"
+                    if (currentSelectedOption == "Option 1") {
+                        // Check if trialNum exists in answers
+                        if (trialNum in answers) {
+                            answers[trialNum].push("now"); // Append "now" to the existing list at trialNum
+                        } else {
+                            answers[trialNum] = ["now"]; // Initialize a new list with "now"
                         }
-                        else if (currentSelectedOption=="Option 2"){
-                            answers[trialNum]="later"
+                    } else if (currentSelectedOption == "Option 2") {
+                        // Check if trialNum exists in answers
+                        if (trialNum in answers) {
+                            answers[trialNum].push("later"); // Append "later" to the existing list at trialNum
+                        } else {
+                            answers[trialNum] = ["later"]; // Initialize a new list with "later"
                         }
+                    }
                 }
                 else{ //user did not provide an answer
-                    //TO DO: skip trial
-                    answers[trialNum]="skipped" 
+                    // skip trial
+                    // Check if trialNum exists in answers
+                    if (trialNum in answers) {
+                        answers[trialNum].push("skipped"); // Append "skipped" to the existing list at trialNum
+                    } else {
+                        answers[trialNum] = ["skipped"]; // Initialize a new list with "skipped"
+                    }
                 }
-
                 //display next trial corresponding questions
                 var immediateOffer= trials[trialNum+1][0]
                 var delayedOffer= trials[trialNum+1][1]
@@ -200,19 +233,38 @@
                     currentSelectedOption="none"
                 }
                 //increment trial number
+                console.log("RTs is ",RTs)
                 console.log("answers is ",answers)
                 trialNum ++ 
                 document.getElementById('questionNum').innerText= "Question " + (trialNum+1) + " of 45" //change trial num text
+
+                if (trialNum == maxTrialNum){
+                let nextButton = document.getElementById('nextBtn');
+                nextButton.textContent="Submit"
             }
-            else{
-                //disable next button
-                console.log("experimentOver")
+            }
+            else{ //second to last trial
+                // let nextButton = document.getElementById('nextBtn');
+                // nextButton.textContent="Submit"
+                window.location.href = "thankYou.html";
             }
             console.log("next trialNum is ",trialNum)
         }
-
-        //TODO: previous trial answer should be saved
         function previousTrial() {
+            //log timer
+            if (trialNum in RTs) {
+                RTs[trialNum].push(Date.now()); // Append current timestamp to the existing list at trialNum
+            } else {
+                RTs[trialNum] = [Date.now()]; // Initialize a new list with current timestamp
+            }
+
+            backBtnClicked ++ //increment back btn count
+
+            //disable back btn
+            let button = document.getElementById('backBtn');
+            button.disabled = true; // Enables the button
+            button.classList.add('disabled'); // Adds a 'disabled' class to the button
+
             getSelected()
 
             if (trialNum >0) {
