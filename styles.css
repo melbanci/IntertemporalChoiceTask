@@ -38,7 +38,7 @@ body, html {
 }
 /* Header styling */
 .header {
-    background-color: green;
+    background-color: #007bff;
     color: white;
     padding: 10px;
     text-align: left;
@@ -145,7 +145,7 @@ body, html {
     padding: 20px;
     border: none;
     border-radius: 5px;
-    background-color: green;
+    background-color: #696969;
     color: white;
     cursor: pointer;
     font-size: 1.1rem;
@@ -154,11 +154,21 @@ body, html {
 
 /* Button hover and disabled states */
 .navigationButtons:hover {
-    background-color: darkgreen;
+    background-color: #696969;
 }
 
 .navigationButtons:disabled {
     background-color: #f2f2f2;
+}
+
+.navigationButtons.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+.navigationButtons.pressed {
+    color: white;
+    background-color: #007bff;
 }
 
 /* Responsive adjustments for buttons on small screens */

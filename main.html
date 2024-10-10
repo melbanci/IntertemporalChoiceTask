@@ -36,8 +36,19 @@
     </div>
 
     <div id="button-container">
-        <button id="backBtn" disabled=true class="navigationButtons disabled" onclick="previousTrial()">Back</button>
-        <button id="nextBtn" class="navigationButtons" onclick="nextTrial()">Next</button>
+        <button id="backBtn" 
+        disabled=true 
+        class="navigationButtons disabled" 
+        ontouchstart="this.classList.add('pressed')" 
+        ontouchend="this.classList.remove('pressed')"
+        onclick="previousTrial()">Back</button>
+
+        <button id="nextBtn" 
+        class="navigationButtons"         
+        ontouchstart="this.classList.add('pressed')" 
+        ontouchend="this.classList.remove('pressed')"
+        onclick="nextTrial()">Next</button>
+        
     </div>
 
     <script>
