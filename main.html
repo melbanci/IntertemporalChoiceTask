@@ -74,9 +74,19 @@
         let currentSelectedOption="none"
 
         //=========SEND DATA TO SERVER==========
+        function initializeData(){
+            let data={
+                subjectId: "mel_test",
+                experimentName: "IntertemporalChoiceTask",
+                version: "1",
+                answers:answers,
+                RTs: RTs
+            }
+            return data
+        }
         function sendData(data) {
             const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'http://54.224.65.24/experiments/SRT_mobile/saveData.php', true);
+            xhr.open('POST', 'http://52.0.147.87/experiments/IntertemporalChoiceTask2/saveData.php', true);
             xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -97,7 +107,6 @@
             }
         }
         //=====================================
-
 
         function getSelected() {
             var buttons = document.querySelectorAll('.response-container button');
@@ -246,10 +255,12 @@
             else{ //second to last trial
                 // let nextButton = document.getElementById('nextBtn');
                 // nextButton.textContent="Submit"
+                sendData(initializeData())
                 window.location.href = "thankYou.html";
             }
             console.log("next trialNum is ",trialNum)
         }
+
         function previousTrial() {
             //log timer
             if (trialNum in RTs) {
