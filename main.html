@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles.css">
-    <!-- Add any additional stylesheets or scripts here -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 </head>
 <body>
     <div class="header">
-        <h1 id="header-text">Intertemporal Choice Task</h1>
+        <h2 id="header-text">Intertemporal Choice Task</h2>
     </div>
 
     <h2 id="questionNum">Question 1 of 45</h2>
@@ -34,13 +32,12 @@
 
     </div>
     
-         <p id="noResponseError" style="display: none;">Please make your selection</p>
+    <p id="noResponseError" style="display: none;">Please make your selection</p>
     </div>
 
     <div id="button-container">
         <button id="backBtn" disabled=true class="navigationButtons disabled" onclick="previousTrial()">Back</button>
         <button id="nextBtn" class="navigationButtons" onclick="nextTrial()">Next</button>
-        <!-- <button class="navigationButtons" onclick="skipTrial()">Skip</button> -->
     </div>
 
     <script>
@@ -107,7 +104,6 @@
             }
         }
         //=====================================
-
         function getSelected() {
             var buttons = document.querySelectorAll('.response-container button');
             currentSelectedOption= "none"

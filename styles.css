@@ -2,127 +2,189 @@
 body, html {
     margin: 0;
     padding: 0;
-    height: 100%;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    font-size: 36px;
+    font-size: 1.6rem;  /* Base font size */
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    body {
+        font-size: 0.75rem; /* Smaller font size for mobile screens */
+    }
+    p {
+        font-size: 1rem; /* Smaller font size for mobile screens */
+    }
+    .header{
+        font-size: 0.75rem;  /* Adjust font size relative to screen size */
+    }
+}
+
+@media (min-width: 1200px) {
+    body {
+        font-size: 1rem; /* Larger font size for bigger screens */
+    }
+    p {
+        font-size: 1.5rem; 
+    }
+    .header{
+        font-size: 1rem;  /* Adjust font size relative to screen size */
+    }
+}
 /* Header styling */
 .header {
-    background-color: green; /* Blue background */
-    color: white;              /* White text color */
-    padding: 20px;             /* Padding inside the header */
-    text-align: left;        /* Centered text */
-    font-size: 24px;           /* Font size for the header title */
-    width: 100%;               /* Full width header */
+    background-color: green;
+    color: white;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
 }
+
 #header-text {
-    padding: 20px;
+    padding: 10px;
 }
 
 #questionNum {
-    padding: 20px;
+    padding: 10px;
 }
-/* Make the form container fill the entire available space */
+
+/* Content area */
 #content-div {
     display: flex;
     flex-direction: column;
-    flex: 1; /* Make form-div take up the remaining space above the button container */
-    padding: 20px; /* Padding inside the form container */
-    margin: 20px; /* Optional: margin around the form container */
+    flex: 1;
+    padding: 10px;
+    margin: 20px;
 }
 
-/* Style the question */
+/* Question styling */
 #questionDiv {
     width: 100%;
     margin: 5px;
     margin-bottom: 50px;
     text-align: center;
-    flex: 0; /* Keep the question's padding, but don't allow it to grow */
+    flex: 0;
 }
-/* Style the question */
+
 #question {
     padding: 20px;
     text-align: center;
-    flex: 0; /* Keep the question's padding, but don't allow it to grow */
 }
-/* Form group: label and input on the same line */
 
-.responseContainer {
-    width: 100%; 
+/* Response container for buttons */
+.response-container {
+    /* width: 100%; */
     display: flex;
-    flex: 2;
+    flex: 1;
     flex-direction: row;
+    justify-content: center; /* Center the buttons horizontally */
+    /* align-items: center;     Center the buttons vertically if needed */
+    box-sizing: border-box;  /* Ensure padding is included in width */
+    padding: 0 10px;         /* Optional padding to avoid edge overflow */
 }
-/* Styling the answer buttons */
+
+/* Button styling */
 .optionButtons {
-    width: 100%; 
-    margin: 5px 5px;
-    padding: 30px;
+    /* width: 100%; */
+    margin: 5px;
+    padding: 20px;
     border: none;
     border-radius: 5px;
     background-color: #f2f2f2;
     color: black;
     cursor: pointer;
-    font-size: 36px;
+    font-size: 1.1rem; /* Responsive font size */
 }
-/* Button selection style */
+
 .optionButtons.selected {
     background-color: #007bff;
     color: white;
 }
+
 .optionButtons.pressed {
     color: white;
     background-color: #007bff;
-  }
+}
+
 .optionButtons.unselected {
     background-color: #f2f2f2;
     color: black;
 }
-/* Button hover effect */
-/* .optionButtons:hover {
-    background-color: darkgrey;
-} */
 
-/* Style error message if trying to submit with no answer */
+/* Error message styling */
 #noResponseError {
     color: red;
     text-align: center;
     margin-top: 20px;
-    flex:0
+    flex: 0;
 }
 
-/* The button container is fixed at the bottom */
+/* Button container at the bottom */
 #button-container {
+    /* flex: 1; */
     display: flex;
     justify-content: space-around;
-    padding: 20px;
+    position: absolute; /* Stick to the bottom of the viewport */
+    bottom: 20; /* Stick to the bottom of the viewport */
+    left: 10; /* Stick to the bottom of the viewport */
+    right: 20; /* Stick to the bottom of the viewport */
+    padding: 10px;
+    width: calc(100% - 20px); /* Subtract margins from total width to fit the screen */
+    box-sizing: border-box; /* Include padding in width calculations */
 }
-/* Styling the navigation buttons (back, answer, skip) */
+
+/* Navigation buttons (Back, Next) */
 .navigationButtons {
     flex: 1;
     margin: 0 5px;
-    padding: 60px;
+    padding: 20px;
     border: none;
     border-radius: 5px;
     background-color: green;
     color: white;
     cursor: pointer;
-    font-size: 36px;
+    font-size: 1.1rem;
+    width: 100%;
 }
-/* Button hover effect */
+
+/* Button hover and disabled states */
 .navigationButtons:hover {
-    background-color: green;
+    background-color: darkgreen;
 }
+
 .navigationButtons:disabled {
     background-color: #f2f2f2;
 }
-/* Responsive: Ensure buttons remain side by side on small screens */
-@media (max-width: 600px) {
+
+/* Responsive adjustments for buttons on small screens */
+@media (max-width: 768px) {
     .navigationButtons {
-        font-size: 24px;
-        padding: 15px;
+        font-size: 1rem;
+        padding: 10px;
+        max-height: 80px; /* Ensure the buttons don't get too tall */
+
+    }
+    .optionButtons {
+        font-size: 1rem;
+        padding: 10px;
+        max-height: 80px; /* Ensure the buttons don't get too tall */
+    }
+}
+@media (min-width: 1200px) {
+    .navigationButtons {
+        font-size: 1rem;
+        padding: 10px;
+        max-height: 80px; /* Ensure the buttons don't get too tall */
+
+    }
+    .optionButtons {
+        font-size: 1rem;
+        padding: 10px;
+        max-height: 80px; /* Ensure the buttons don't get too tall */
     }
 }
